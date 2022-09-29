@@ -25,8 +25,8 @@ class ProductReqeust extends FormRequest
     {
         return [
             "name" => "required|string",
-            "price" => "required|integer|max:10",
-            "stock" => "required|integer|max:5"
+            "price" => "required|integer|max:9999999999",
+            "stock" => "required|integer|max:99999"
         ];
     }
 }

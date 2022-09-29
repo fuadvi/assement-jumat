@@ -63,7 +63,6 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -73,9 +72,27 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductReqeust $request, $id)
     {
-        //
+        try {
+            $product = Product::findOrFail($id);
+            $product->update($request->all());
+        } catch (\Throwable $th) {
+            return response()->json([
+                [
+                    "response_code" => 4009901,
+                    "response_message" => "Invalid Field Format",
+
+                ]
+            ]);
+        }
+
+        return response()->json([
+            [
+                "response_code" => 2009900,
+                "response_message" => "Successful",
+            ]
+        ]);
     }
 
     /**
