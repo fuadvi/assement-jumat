@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductReqeust;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -41,9 +42,17 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductReqeust $request)
     {
-        //
+        $product = Product::create($request->all());
+
+        return response()->json([
+            [
+                "response_code" => 2009900,
+                "response_message" => "Successful",
+                "data" => $product
+            ]
+        ]);
     }
 
     /**
