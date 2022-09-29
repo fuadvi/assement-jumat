@@ -74,40 +74,42 @@ class TransactionController extends Controller
             'status' => "pending"
         ]);
 
-        // try {
+        try {
 
-        $client = new \GuzzleHttp\Client();
-        $res = $client->request('POST', 'https://sandbox.saebo.id/api/v1/payments', [
-            'verify' => false,
-            'headers' => [
-                'Accept' => 'application/json',
-                'X-API-KEY' => '123ABC'
-            ],
-            'body' => json_encode(
+            $client = new \GuzzleHttp\Client();
+            $res = $client->request('POST', 'https://sandbox.saebo.id/api/v1/payments', [
+                'verify' => false,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'X-API-KEY' => '123ABC'
+                ],
+                'body' => json_encode(
+                    [
+                        'reference_id' => $transaction->id,
+                        "amount" => $transaction->quantity,
+                        "product" => $product->name
+                    ]
+                )
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
                 [
-                    'reference_id' => $transaction->id,
-                    "amount" => $transaction->quantity,
-                    "product" => $product->name
+                    "response_code" => 5009901,
+                    "response_message" => "Internal Server Error",
                 ]
-            )
-        ]);
-        // } catch (\Throwable $th) {
-        //     return response()->json([
-        //         [
-        //             "response_code" => 5009901,
-        //             "response_message" => "Internal Server Error",
-        //         ]
-        //     ]);
-        // }
+            ]);
+        }
+
+        $transaction->reference_number = rand(1, 99);
+        $transaction->save();
 
 
-        return response()->json($res->getBody(), 200);
 
         return response()->json([
             [
                 "response_code" => 2009900,
                 "response_message" => "Successful",
-                "data" => $transaction
+                "reference_number" => $transaction->reference_number
             ]
         ]);
     }
