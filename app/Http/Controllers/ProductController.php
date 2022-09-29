@@ -13,25 +13,28 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
-
-        if ($products->isEmpty()) {
+        $products = Product::query();
+        if ($products->get()->isEmpty()) {
             return response()->json([
                 [
                     "response_code" => 2009900,
-                    "response_message" => "Successful",
+                    "response_message" => "list kosong",
                     "data" => []
                 ]
             ]);
         }
 
+        $products->when($request->query("cari"), function ($q) use ($request) {
+            return $q->where('name', "LIKE", "%$request->name%");
+        });
+
         return response()->json([
             [
                 "response_code" => 2009900,
                 "response_message" => "Successful",
-                "data" => $products
+                "data" => $products->paginate(10)
             ]
         ]);
     }

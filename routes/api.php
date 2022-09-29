@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,11 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->apiResource('product', ProductController::class);
+Route::middleware('auth:sanctum')->post('transaction', [TransactionController::class, 'checkout']);
+
+Route::middleware('auth:sanctum')->controller(TransactionController::class)->group(function () {
+    Route::get('/list-transaction', 'listTransaction');
+    Route::post('/transaction', 'Transaction');
+    Route::put('/transaction/{id}', 'updateTransaction');
+    Route::get('/transaction/{id}', 'show');
+});
