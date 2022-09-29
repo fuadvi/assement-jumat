@@ -22,4 +22,9 @@ class AuthController extends Controller
             ]
         );
     }
+
+    public function login(RegisterRequest $request)
+    {
+        # code...
+    }
 }
